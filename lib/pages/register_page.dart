@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -117,9 +118,35 @@ class _RegisterPageState extends State<RegisterPage> {
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // To Do: Lanjut ke proses registrasi
+                      final success = await AuthService.register(
+                        username: _usernameController.text.trim(),
+                        password: _passwordController.text,
+                      );
+
+                      if (!mounted) return;
+
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Registration successful! Please login.',
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        Navigator.pop(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Registration failed. Please try again.',
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     }
                   },
                   child: const Text('Register', style: TextStyle(fontSize: 16)),
