@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/pages/home_page.dart';
 import 'package:recipe_app/pages/register_page.dart';
 import 'package:recipe_app/services/auth_service.dart';
 
@@ -105,7 +106,12 @@ class _LoginPageState extends State<LoginPage> {
                             backgroundColor: Colors.green,
                           ),
                         );
-                        // TODO: Navigasi ke Home Page
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
