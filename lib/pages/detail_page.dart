@@ -36,8 +36,22 @@ class _DetailPageState extends State<DetailPage> {
   Future<void> _toggleFavorite() async {
     if (_isFavorite) {
       await FavoriteService.removeFavorite(widget.recipeId);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Removed from favorites'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     } else {
       await FavoriteService.addFavorite(widget.recipeId);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Added to favorites'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     }
     if (!mounted) return;
     setState(() {

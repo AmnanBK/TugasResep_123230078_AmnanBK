@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/models/recipe.dart';
 import 'package:recipe_app/pages/favorite_page.dart';
+import 'package:recipe_app/pages/login_page.dart';
 import 'package:recipe_app/services/api_service.dart';
 import 'package:recipe_app/pages/detail_page.dart';
+import 'package:recipe_app/services/auth_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,8 +31,37 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              // TODO: Logout logic (milestone berikutnya)
+            onPressed: () async {
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Logout'),
+                  content: const Text('Are you sure you want to logout?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+
+              if (shouldLogout == true && mounted) {
+                await AuthService.logout();
+                if (!mounted) return;
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  (route) => false,
+                );
+              }
             },
           ),
         ],

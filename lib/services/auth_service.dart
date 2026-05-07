@@ -47,9 +47,15 @@ class AuthService {
     return prefs.getBool(_isLoggedInKey) ?? false;
   }
 
-  // Logout
+  // Logout dan hapus semua data
   static Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_isLoggedInKey, false);
+  }
+
+  // Clear semua data
+  static Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }
