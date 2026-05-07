@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/pages/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
             const Icon(Icons.restaurant_menu, size: 80, color: Colors.orange),
             const SizedBox(height: 16),
             const Text(
-              'Recipe App',
+              'Login',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -87,7 +88,12 @@ class _LoginPageState extends State<LoginPage> {
                 const Text("Don't have an account?"),
                 TextButton(
                   onPressed: () {
-                    // To Do: navigasi ke halaman registrasi
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterPage(),
+                      ),
+                    );
                   },
                   child: const Text('Register'),
                 ),
