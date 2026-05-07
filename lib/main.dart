@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:recipe_app/pages/login_page.dart';
 import 'package:recipe_app/pages/home_page.dart';
 import 'package:recipe_app/services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   runApp(const MyApp());
 }
 

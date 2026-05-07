@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/models/recipe.dart';
 import 'package:recipe_app/services/api_service.dart';
+import 'package:recipe_app/services/favorite_service.dart';
 
 class DetailPage extends StatefulWidget {
   final String recipeId;
@@ -13,12 +14,35 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   late Future<RecipeDetail> _detailFuture;
-  bool _isFavorite = false; // placeholder, akan dihubungkan ke Hive nanti
+  bool _isFavorite = false;
+  bool _isCheckingFavorite = true; // untuk loading saat cek status
 
   @override
   void initState() {
     super.initState();
     _detailFuture = ApiService.getRecipeDetail(widget.recipeId);
+    _checkFavoriteStatus();
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    final isFav = await FavoriteService.isFavorite(widget.recipeId);
+    if (!mounted) return;
+    setState(() {
+      _isFavorite = isFav;
+      _isCheckingFavorite = false;
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    if (_isFavorite) {
+      await FavoriteService.removeFavorite(widget.recipeId);
+    } else {
+      await FavoriteService.addFavorite(widget.recipeId);
+    }
+    if (!mounted) return;
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
   }
 
   @override
@@ -81,19 +105,19 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
                 actions: [
-                  // Tombol favorit di AppBar
-                  IconButton(
-                    icon: Icon(
-                      _isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: _isFavorite ? Colors.red : Colors.white,
+                  if (_isCheckingFavorite)
+                    const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                  else
+                    IconButton(
+                      icon: Icon(
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: _isFavorite ? Colors.red : Colors.white,
+                      ),
+                      onPressed: _toggleFavorite,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isFavorite = !_isFavorite;
-                      });
-                      // TODO: Simpan/hapus dari Hive (milestone berikutnya)
-                    },
-                  ),
                 ],
               ),
 

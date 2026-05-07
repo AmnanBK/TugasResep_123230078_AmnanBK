@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/models/recipe.dart';
+import 'package:recipe_app/pages/favorite_page.dart';
 import 'package:recipe_app/services/api_service.dart';
 import 'package:recipe_app/pages/detail_page.dart';
 
@@ -146,7 +147,12 @@ class _HomePageState extends State<HomePage> {
         ],
         currentIndex: 0,
         onTap: (index) {
-          // TODO: Navigasi ke Favorites page (milestone berikutnya)
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FavoritePage()),
+            );
+          }
         },
       ),
     );
